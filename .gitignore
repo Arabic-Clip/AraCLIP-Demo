@@ -1,0 +1,16 @@
+cashed_pickles/*
+photos/*
+.env/*
+*/__pycache__/*
+.gradio/*
+*/.ipynb_checkpoints/*
+*/.vscode/*
+*/.git/*
+*/.gitignore
+*/.gitattributes
+*/.gitmodules
+*/.gitkeep
+*/.gitlab-ci.yml
+*/.gitlab/*
+*/.github/*
+*/

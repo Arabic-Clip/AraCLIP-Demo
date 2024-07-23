@@ -106,32 +106,20 @@ def find_image(language_model,clip_model, text_query, dataset, image_features, t
         probs = txt_logits.softmax(dim=-1).cpu().detach().numpy().T
 
         file_paths = []
-        labels, json_data = {}, {}
+        labels = {}
 
         for i in range(1, num+1):
             idx = np.argsort(probs, axis=0)[-i, 0]
             path = images_path + dataset.get_image_name(idx)
                     
-            path_l = (path,f"{sorted_data[idx]['caption_ar']}")
+            path_l = (path, "")
 
             labels[f" Image # {i}"] = probs[idx]
-            json_data[f" Image # {i}"] = sorted_data[idx]
 
             file_paths.append(path_l)
 
 
-    json_text = {} 
-
-    for _, txt_logits_full in text_logits.items():
-
-        probs_text = txt_logits_full.softmax(dim=-1).cpu().detach().numpy().T
-
-        for j in range(1, num+1):
-
-            idx = np.argsort(probs_text, axis=0)[-j, 0]
-            json_text[f" Text # {j}"] = sorted_data[idx]
-
-    return file_paths, labels, json_data, json_text
+    return file_paths, labels
 
 
 
@@ -163,12 +151,12 @@ araclip = AraClip()
 def predict(text, num, dadtaset_select):
 
     if dadtaset_select == "XTD dataset":
-        image_paths, labels, json_data, json_text = find_image(araclip.language_model,araclip.clip_model, text, araclip.load_xtd_dataset(), araclip.load_pickle_file("cashed_pickles/XTD_pickles/image_features_XTD_1000_images_arabert_siglib_best_model.pickle") , araclip.load_pickle_file("cashed_pickles/XTD_pickles/image_features_XTD_1000_images_arabert_siglib_best_model.pickle"), araclip.sorted_data_xtd, 'photos/XTD10_dataset/', num=int(num))
+        image_paths, labels = find_image(araclip.language_model,araclip.clip_model, text, araclip.load_xtd_dataset(), araclip.load_pickle_file("cashed_pickles/XTD_pickles/araclip/image_features_XTD_1000_images_arabert_siglib_best_model.pickle") , araclip.load_pickle_file("cashed_pickles/XTD_pickles/araclip/image_features_XTD_1000_images_arabert_siglib_best_model.pickle"), araclip.sorted_data_xtd, 'photos/XTD10_dataset/', num=int(num))
 
     else:
-        image_paths, labels, json_data, json_text = find_image(araclip.language_model,araclip.clip_model, text, araclip.load_flicker8k_dataset(), araclip.load_pickle_file("cashed_pickles/flicker_8k/image_features_flicker_8k_images_arabert_siglib_best_model.pickle") , araclip.load_pickle_file("cashed_pickles/flicker_8k/text_features_flicker_8k_images_arabert_siglib_best_model.pickle"), araclip.sorted_data_flicker8k, "photos/Flicker8k_Dataset/", num=int(num))
+        image_paths, labels = find_image(araclip.language_model,araclip.clip_model, text, araclip.load_flicker8k_dataset(), araclip.load_pickle_file("cashed_pickles/flicker_8k/araclip/image_features_flicker_8k_images_arabert_siglib_best_model.pickle") , araclip.load_pickle_file("cashed_pickles/flicker_8k/araclip/text_features_flicker_8k_images_arabert_siglib_best_model.pickle"), araclip.sorted_data_flicker8k, "photos/Flicker8k_Dataset/", num=int(num))
 
-    return image_paths, labels, json_data, json_text
+    return image_paths, labels
 
 
 class Mclip():
@@ -203,10 +191,10 @@ def predict_mclip(text, num, dadtaset_select):
 
 
     if dadtaset_select == "XTD dataset":
-        image_paths, labels, json_data, json_text = find_image(mclip.language_model_mclip,mclip.clip_model_mclip, text, mclip.load_xtd_dataset() , mclip.load_pickle_file("cashed_pickles/XTD_pickles/image_features_XTD_1000_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.load_pickle_file("cashed_pickles/XTD_pickles/text_features_XTD_1000_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.sorted_data_xtd , 'photos/XTD10_dataset/', num=int(num))
+        image_paths, labels = find_image(mclip.language_model_mclip,mclip.clip_model_mclip, text, mclip.load_xtd_dataset() , mclip.load_pickle_file("cashed_pickles/XTD_pickles/mclip/image_features_XTD_1000_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.load_pickle_file("cashed_pickles/XTD_pickles/mclip/text_features_XTD_1000_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.sorted_data_xtd , 'photos/XTD10_dataset/', num=int(num))
 
     else:
-        image_paths, labels, json_data, json_text = find_image(mclip.language_model_mclip,mclip.clip_model_mclip, text, mclip.load_flicker8k_dataset() , mclip.load_pickle_file("cashed_pickles/flicker_8k/image_features_flicker_8k_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.load_pickle_file("cashed_pickles/flicker_8k/text_features_flicker_8k_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.sorted_data_flicker8k , 'photos/Flicker8k_Dataset/', num=int(num))
+        image_paths, labels = find_image(mclip.language_model_mclip,mclip.clip_model_mclip, text, mclip.load_flicker8k_dataset() , mclip.load_pickle_file("cashed_pickles/flicker_8k/mclip/image_features_flicker_8k_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.load_pickle_file("cashed_pickles/flicker_8k/mclip/text_features_flicker_8k_images_XLM_Roberta_Large_Vit_B_16Plus_ar.pickle") , mclip.sorted_data_flicker8k , 'photos/Flicker8k_Dataset/', num=int(num))
 
     
-    return image_paths, labels, json_data, json_text
+    return image_paths, labels
